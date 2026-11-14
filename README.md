@@ -161,6 +161,8 @@ Checks:
 
 To rebuild the terrain masks, download `LDEM_80S_80M.LBL` and `LDEM_80S_80M.IMG` (about 111 MB) from https://imbrium.mit.edu/DATA/LOLA_GDR/POLAR/IMG/ into a folder called `LolaData/` (not committed), then run `.venv/bin/python Terrain.py`. The label gives the map centre as pixel 3799.5, so that value is used. Sites north of 84°S are not supported, so that IM-2 Athena is included.
 
+To rebuild the slide figures and the slide deck, install `python-pptx` (`.venv/bin/pip install python-pptx`), then run `.venv/bin/python MakeFigures.py` and `.venv/bin/python MakeSlides.py`. The slides are saved in `Slides/`.
+
 To deploy on Streamlit Community Cloud, use `App.py` as the main file and Python 3.12 or newer.
 
 ## Data and library credits
