@@ -85,8 +85,7 @@ def TitleSlide(Deck):
     Run = Box.text_frame.paragraphs[0].runs[0]
     Run.font.name, Run.font.size, Run.font.bold, Run.font.color.rgb = FONT, Pt(46), True, ACCENT
     AddText(Slide, [TEAM, "Challenge: Lunar Landing Site Navigator", "NASA Space Apps Challenge 2026"], MARGIN, 4.0, SLIDE_WIDTH - 2 * MARGIN, 26)
-    Link = AddText(Slide, [f"Live app: {APP_URL}"], MARGIN, 5.8, SLIDE_WIDTH - 2 * MARGIN, 24, ACCENT)
-    Link.text_frame.paragraphs[0].runs[0].hyperlink.address = APP_URL
+    AddText(Slide, [f"Live app: {APP_URL}"], MARGIN, 5.8, SLIDE_WIDTH - 2 * MARGIN, 24, ACCENT)
 
 
 def DelaySentence():
