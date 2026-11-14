@@ -12,7 +12,7 @@ LunaWindow is a web app that tells a mission planner, for a chosen Moon landing 
 
 ## Link to Project Demo
 
-PASTE GOOGLE DRIVE LINK TO LunaWindow.pdf
+https://drive.google.com/file/d/15_H8KEuP0GlyXe2SD4QNdb8ICislZH-y/view?usp=sharing
 
 ## Link to Final Project
 
@@ -58,11 +58,15 @@ PASTE GOOGLE DRIVE LINK TO LunaWindow.pdf
 
 ## Use of Artificial Intelligence
 
-- All Python code was written by an AI coding assistant, Claude Code with Claude Sonnet 5.5, from requirements written by our team. Claude Opus and Claude Fable were used for planning, the science check and verifying coordinates and data formats. Claude was also used to review the work and to draft the README, the slides and this text.
-- The team chose the challenge and the idea, set the requirements and the code style, reviewed and tested every milestone, deployed the app and made the final decisions.
-- Correctness was checked with plain assert tests (`Tests.py`) and by validating against JPL Horizons (`Validate.py`, `Data/HorizonsCheck.csv`). AI output was not trusted without these checks.
-- No AI-generated images are used. Every figure is drawn by our matplotlib code from NASA data. No numbers in the app come from an AI model.
-- AI use is marked in the git commit trailers (from the third commit on), the app footer, the README, the PNG metadata, the slide file properties and `AI_USE.md` in the repository.
+AI tools were a core part of how we built LunaWindow, and we want to be clear about how.
+
+Team role: we chose the challenge and the idea (a landing-site forecast with a mission-delay simulator), wrote the requirements, the architecture and the code style, set the milestones, reviewed and tested each one, deployed the app, and made every design decision.
+
+AI role: Claude Code (Claude Sonnet) wrote the Python code from our specifications, one milestone at a time. Claude Opus and Claude Fable helped us plan, check the science (lunar reference frames, horizon geometry) and verify landing-site coordinates against their sources. Claude helped draft the README, the slides and this text, which we then reviewed.
+
+How we checked the AI's work: automated tests (Tests.py) and a comparison against NASA/JPL Horizons at 3 sites, 5 dates and 2 bodies. The worst difference was 0.000066 degrees. We did not trust any output without these checks.
+
+No AI-generated images are used. Every figure is drawn by our code from NASA data. AI use is also marked in the git commit metadata and in AI_USE.md.
 
 ## References
 

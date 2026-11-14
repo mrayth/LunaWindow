@@ -1,6 +1,8 @@
 from datetime import datetime, timezone
+from pathlib import Path
 
 import numpy
+from streamlit.testing.v1 import AppTest
 
 import Engine
 import Metrics
@@ -8,6 +10,9 @@ import Terrain
 from Sites import SITES, SiteByName
 
 SUN_AT_ONE_AU_KM = 149597870.7
+APP_PATH = str(Path(__file__).parent / "App.py")
+APP_TIMEOUT = 120
+TERRAIN_SITE = "Shackleton Connecting Ridge"
 
 
 def Close(Value, Expected, Tolerance=0.001):
@@ -271,6 +276,31 @@ def TestRealData():
     assert Metrics.PowerFull(Ridge, Flat).all()
 
 
+def FindWidget(Widgets, Label):
+    return next(Item for Item in Widgets if Item.label == Label)
+
+
+def CheckRender(At, Name):
+    assert not At.exception, [Item.value for Item in At.exception]
+    Pairs = [(Item.label, Item.value) for Item in At.metric]
+    assert len(Pairs) == 4 and all(Pair[1] for Pair in Pairs)
+    print(f"{Name}:")
+    for Label, Value in Pairs:
+        print(f"  {Label}: {Value}")
+
+
+def TestAppRenders():
+    At = AppTest.from_file(APP_PATH, default_timeout=APP_TIMEOUT).run()
+    CheckRender(At, "App default site")
+    FindWidget(At.sidebar.selectbox, "Site A").set_value(TERRAIN_SITE).run()
+    FindWidget(At.sidebar.radio, "Horizon").set_value("LOLA terrain").run()
+    CheckRender(At, f"{TERRAIN_SITE} with LOLA terrain")
+    assert any("LOLA terrain" in Item.value for Item in At.caption)
+    FindWidget(At.sidebar.selectbox, "Site B (optional, for Compare)").set_value("IM-2 Athena").run()
+    assert not At.exception, [Item.value for Item in At.exception]
+    assert len(At.metric) == 12
+
+
 if __name__ == "__main__":
     TestAngularRadius()
     TestMasks()
@@ -293,4 +323,5 @@ if __name__ == "__main__":
     TestTerrainMath()
     TestMaskFiles()
     TestRealData()
+    TestAppRenders()
     print("ALL TESTS PASSED")

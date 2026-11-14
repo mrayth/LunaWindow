@@ -17,6 +17,7 @@ FIGURES_DIR = SLIDES_DIR / "Figures"
 DECK_PATH = SLIDES_DIR / "LunaWindow.pptx"
 APP_URL = "https://lunawindow.streamlit.app"
 TEAM = (Path(__file__).parent / "Data" / "Team.txt").read_text().strip()
+CLOSING_LINE = "From a launch slip to a new landing window in seconds."
 AI_LINE = "Built with AI assistance (Claude); details in the repo's AI_USE.md."
 FONT = "Calibri"
 BACKGROUND = RGBColor(0x11, 0x16, 0x24)
@@ -132,6 +133,9 @@ def BuildDeck():
         Column = AddText(Slide, Lines, Left, 1.6, 5.6, 26)
         Head = Column.text_frame.paragraphs[0].runs[0]
         Head.font.bold, Head.font.color.rgb = True, ACCENT
+    Closing = AddText(Slide, [CLOSING_LINE], MARGIN, 4.7, SLIDE_WIDTH - 2 * MARGIN, 30)
+    Closing.text_frame.paragraphs[0].runs[0].font.bold = True
+    AddText(Slide, [APP_URL.replace("https://", "")], MARGIN, 5.5, SLIDE_WIDTH - 2 * MARGIN, 24, ACCENT)
     AddText(Slide, [AI_LINE], MARGIN, SLIDE_HEIGHT - 0.8, SLIDE_WIDTH - 2 * MARGIN, 14, MUTED)
     return Deck
 

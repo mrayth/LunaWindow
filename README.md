@@ -176,7 +176,7 @@ To deploy on Streamlit Community Cloud, use `App.py` as the main file and Python
 
 ## Use of AI
 
-This project was built with AI assistance (Claude). All code was written by an AI coding assistant from requirements written by Team Wildfire#8151, and every milestone was reviewed and tested by the team. No AI-generated images are used: every figure is drawn by our matplotlib code from NASA data. Details, including which tools did what, are in [AI_USE.md](AI_USE.md).
+Claude Code (Claude Sonnet) wrote the code from our specifications; Claude Opus and Claude Fable helped with planning and the science check. Every result was checked by our tests and against JPL Horizons; full statement in [AI_USE.md](AI_USE.md).
 
 ## License and contributors
 
