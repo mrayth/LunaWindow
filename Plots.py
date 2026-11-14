@@ -9,6 +9,7 @@ import Metrics
 from Sites import SiteByName
 
 CREDIT = "Made with Python matplotlib"
+AI_NOTE = "Drawn by matplotlib code written with AI assistance (Claude) from NASA data. Team Wildfire. See AI_USE.md."
 STRIP_Y_MIN = -5.0
 STRIP_Y_MAX = 12.0
 PATH_DAYS = 30
@@ -147,7 +148,7 @@ def HorizonStripFigure(Track, When, Mask, Result):
 def SaveFigure(Fig, Name):
     Target = Path(__file__).parent / Name
     Fig.text(0.99, 0.01, CREDIT, ha="right", fontsize=8)
-    Fig.savefig(Target, dpi=150)
+    Fig.savefig(Target, dpi=150, metadata={"Description": AI_NOTE})
     plt.close(Fig)
     return Target
 
