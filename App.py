@@ -20,6 +20,16 @@ CUSTOM = "Custom"
 SPHERE = "Ideal sphere"
 TERRAIN = "LOLA terrain"
 NO_SITE = "None"
+COUNTDOWNS = {"Sun": ("Time to sunset", "Time to sunrise"), "Earth": ("Time to Earthset", "Time to Earthrise")}
+SET_HELP = {
+    "Sun": "Time until the whole Sun disc is no longer above the horizon, which ends power.",
+    "Earth": "Time until Earth drops below the horizon (plus any CommsMargin), which ends direct comms.",
+}
+RISE_HELP = {
+    "Sun": "The Sun is not fully above the horizon now. Time until the whole disc is up and power returns.",
+    "Earth": "Earth is below the horizon now. Time until it is up and direct comms return.",
+}
+FOOTER_PATH = Engine.DATA_DIR / "Footer.txt"
 HORIZON_NOTE = "Real terrain can block the Sun and Earth, especially near the pole."
 POLE_REASONS = [
     "Near the poles the Sun never climbs far above the horizon, so it slides around the sky at a very low angle and even a small hill can hide it.",
@@ -138,18 +148,26 @@ def ShowVerdict(Result):
         st.error(Reason)
 
 
-def TimeCard(Hours, Capped, IsUp):
-    if not IsUp:
-        return "Already down"
-    return Metrics.FormatHours(Hours, Capped)
+def ElevationCard(Column, Label, Alt, Az):
+    Note = f"Azimuth {Az:.1f}°. A negative elevation means the body is below the horizon."
+    Column.metric(Label, f"{Alt:.1f}°", delta="Down" if Alt < 0 else None, delta_color="off", delta_arrow="off", help=Note)
+
+
+def CountdownCard(Column, Result, Body, IsUp):
+    SetLabel, RiseLabel = COUNTDOWNS[Body]
+    Label = SetLabel if IsUp else RiseLabel
+    Key = f"{Body}set" if IsUp else f"{Body}rise"
+    Hours, Capped = Result[f"{Key}Hours"], Result[f"{Key}Capped"]
+    Meaning = SET_HELP[Body] if IsUp else RISE_HELP[Body]
+    Column.metric(Label, Metrics.FormatShort(Hours, Capped), help=f"{Meaning} A value starting with ≥ means this lasts to the end of the computed grid.")
 
 
 def ShowCards(Result):
     First, Second, Third, Fourth = st.columns(4)
-    First.metric("Sun elevation", f"{Result['SunAlt']:.2f}°", help=f"Azimuth {Result['SunAz']:.1f}°")
-    Second.metric("Time to sunset", TimeCard(Result["SunsetHours"], Result["SunsetCapped"], Result["PowerNow"]))
-    Third.metric("Earth elevation", f"{Result['EarthAlt']:.2f}°", help=f"Azimuth {Result['EarthAz']:.1f}°")
-    Fourth.metric("Time to Earthset", TimeCard(Result["EarthsetHours"], Result["EarthsetCapped"], Result["CommsNow"]))
+    ElevationCard(First, "Sun elevation", Result["SunAlt"], Result["SunAz"])
+    CountdownCard(Second, Result, "Sun", Result["PowerNow"])
+    ElevationCard(Third, "Earth elevation", Result["EarthAlt"], Result["EarthAz"])
+    CountdownCard(Fourth, Result, "Earth", Result["CommsNow"])
 
 
 def MissionTab(Mission, When, Settings):
@@ -230,6 +248,8 @@ def Main():
         TimelineTab(Mission, When, Settings)
     with ComparePane:
         CompareTab(Mission, Other, When)
+    st.divider()
+    st.caption(FOOTER_PATH.read_text().strip())
 
 
 if __name__ == "__main__":

@@ -113,6 +113,14 @@ def TestHoursUntilFalse():
     assert Metrics.HoursUntilFalse(Flags("00111"), 2, 60) == (3.0, True)
 
 
+def TestHoursUntilTrue():
+    assert Metrics.HoursUntilTrue(Flags("00110"), 0, 60) == (2.0, False)
+    assert Metrics.HoursUntilTrue(Flags("00110"), 2, 60) == (0.0, False)
+    assert Metrics.HoursUntilTrue(Flags("00110"), 4, 60) == (1.0, True)
+    assert Metrics.HoursUntilTrue(Flags("00000"), 1, 30) == (2.0, True)
+    assert Metrics.HoursUntilTrue(Flags("10001"), 1, 60) == (3.0, False)
+
+
 def TestJointWindow():
     Power = Flags("1111100")
     Earth = Flags("0111111")
@@ -163,6 +171,13 @@ def TestBestWindows():
     assert Metrics.BestWindows(Flags("0" * 12), Earth, Utc, 0, 10, 60) == []
 
 
+def TestFormatShort():
+    assert Metrics.FormatShort(102.0, False) == "4d 6h"
+    assert Metrics.FormatShort(2160.0, True) == "≥90d"
+    assert Metrics.FormatShort(5.0, False) == "0d 5h"
+    assert Metrics.FormatShort(0.0, False) == "now"
+
+
 def TestFormatHours():
     assert Metrics.FormatHours(102.0, False) == "4d 6h"
     assert Metrics.FormatHours(1440.0, True) == "at least 60d 0h"
@@ -197,6 +212,8 @@ def TestSummary():
     Late = Metrics.Summary(Track, numpy.datetime64("2026-01-01T08:00:00"), Metrics.FlatMask(), 0.0, 3.0, "Horizontal")
     assert not Late["PowerNow"] and Late["PowerIndex"] == 0 and Late["Verdict"]["Label"] == "NO-GO"
     assert Late["SunsetHours"] == 0.0
+    assert Late["SunriseHours"] == 4.0 and Late["SunriseCapped"] and Late["EarthriseHours"] == 0.0
+    assert Result["SunriseHours"] == 0.0 and not Result["SunriseCapped"]
     for Key in ["SunAlt", "SunAz", "EarthAlt", "EarthAz", "SunRadius", "EarthRadius", "PowerNow", "CommsNow", "PowerIndex", "SunsetHours", "SunsetCapped", "EarthsetHours", "EarthsetCapped", "JointHours", "JointCapped", "SunlitFraction", "CommsFraction", "Verdict"]:
         assert Key in Result
 
@@ -263,11 +280,13 @@ if __name__ == "__main__":
     TestPowerIndex()
     TestIndexAt()
     TestHoursUntilFalse()
+    TestHoursUntilTrue()
     TestJointWindow()
     TestFraction()
     TestVerdict()
     TestBestWindows()
     TestFormatHours()
+    TestFormatShort()
     TestCompareSentence()
     TestSummary()
     TestCatalog()

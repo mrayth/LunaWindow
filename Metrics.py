@@ -71,6 +71,15 @@ def HoursUntilFalse(Flags, Index, StepMinutes):
     return (len(Flags) - Index) * StepMinutes / 60.0, True
 
 
+def HoursUntilTrue(Flags, Index, StepMinutes):
+    if Flags[Index]:
+        return 0.0, False
+    Rest = Flags[Index:]
+    if Rest.any():
+        return int(numpy.argmax(Rest)) * StepMinutes / 60.0, False
+    return (len(Flags) - Index) * StepMinutes / 60.0, True
+
+
 def JointWindow(PowerFlags, CommsFlags, Index, StepMinutes):
     return HoursUntilFalse(PowerFlags & CommsFlags, Index, StepMinutes)
 
@@ -129,6 +138,8 @@ def Summary(Track, When, Mask, CommsMargin, MinJointHours, PanelType):
     CommsNow = bool(CommsFlags[Index])
     SunsetHours, SunsetCapped = HoursUntilFalse(PowerFlags, Index, Step)
     EarthsetHours, EarthsetCapped = HoursUntilFalse(CommsFlags, Index, Step)
+    SunriseHours, SunriseCapped = HoursUntilTrue(PowerFlags, Index, Step)
+    EarthriseHours, EarthriseCapped = HoursUntilTrue(CommsFlags, Index, Step)
     JointHours, JointCapped = JointWindow(PowerFlags, CommsFlags, Index, Step)
     SunAlt = float(Track["SunAlt"][Index])
     return {
@@ -145,6 +156,10 @@ def Summary(Track, When, Mask, CommsMargin, MinJointHours, PanelType):
         "SunsetCapped": SunsetCapped,
         "EarthsetHours": EarthsetHours,
         "EarthsetCapped": EarthsetCapped,
+        "SunriseHours": SunriseHours,
+        "SunriseCapped": SunriseCapped,
+        "EarthriseHours": EarthriseHours,
+        "EarthriseCapped": EarthriseCapped,
         "JointHours": JointHours,
         "JointCapped": JointCapped,
         "SunlitFraction": Fraction(PowerFlags, Index, FRACTION_DAYS, Step),
@@ -161,6 +176,12 @@ def FormatHours(Hours, Capped):
     if Capped:
         return f"at least {Text}"
     return Text
+
+
+def FormatShort(Hours, Capped):
+    if Capped:
+        return f"≥{int(round(Hours / 24))}d"
+    return FormatHours(Hours, False)
 
 
 def CompareSentence(NameA, NameB, TrackA, TrackB):
