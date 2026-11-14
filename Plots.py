@@ -145,10 +145,11 @@ def HorizonStripFigure(Track, When, Mask, Result):
     return Fig
 
 
-def SaveFigure(Fig, Name):
-    Target = Path(__file__).parent / Name
+def SaveFigure(Fig, Name, Folder=None, Dpi=150):
+    Target = (Folder or Path(__file__).parent) / Name
+    Target.parent.mkdir(parents=True, exist_ok=True)
     Fig.text(0.99, 0.01, CREDIT, ha="right", fontsize=8)
-    Fig.savefig(Target, dpi=150, metadata={"Description": AI_NOTE})
+    Fig.savefig(Target, dpi=Dpi, metadata={"Description": AI_NOTE})
     plt.close(Fig)
     return Target
 
