@@ -119,6 +119,10 @@ Result: PASS. The worst difference is 0.000066 degrees in azimuth and 0.00001 de
 - Power is a Sun-above-horizon test and a simple panel index, not an energy budget. Eclipses of the Sun by Earth are not modeled.
 - Site coordinates come from the public sources listed in `Sites.py` and are only as accurate as those sources.
 
+## License
+
+The LunaWindow code is released under the MIT License (see `LICENSE`). The data files keep their own terms: NASA ephemeris, NAIF kernels, JPL Horizons output and LOLA elevation data are NASA products, which are generally free to reuse with credit, and the site coordinates come from the public sources listed in `Sites.py`. The terrain masks in `Data/` are derived from LOLA data.
+
 ## Contributors
 
 - iceblenderr

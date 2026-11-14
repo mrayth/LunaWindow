@@ -135,7 +135,7 @@ def HorizonStripFigure(Track, When, Mask, Result):
     Ax.set_xlabel("Azimuth (degrees, 0 = north, 90 = east)")
     Ax.set_ylabel("Elevation above horizon (degrees)")
     Ax.set_title("Horizon strip: Sun and Earth discs drawn at true angular size")
-    Ax.legend(loc="upper right", fontsize=8)
+    Ax.legend(loc="upper center", bbox_to_anchor=(0.5, -0.2), ncol=3, fontsize=8)
     Fig.tight_layout()
     Box = Ax.get_window_extent()
     XPerY = (360.0 / Box.width) / ((STRIP_Y_MAX - STRIP_Y_MIN) / Box.height)
