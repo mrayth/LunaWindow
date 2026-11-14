@@ -139,6 +139,7 @@ def BuildDeck():
 def SetProperties(Deck):
     Props = Deck.core_properties
     Props.author = TEAM
+    Props.last_modified_by = TEAM
     Props.title = "LunaWindow: sunlight and signal forecast for Moon landing sites"
     Props.subject = "NASA Space Apps Challenge 2026, Lunar Landing Site Navigator"
     Props.comments = "Built with AI assistance (Claude). Figures are drawn by matplotlib code from NASA data. See AI_USE.md in the repository."
